@@ -42,7 +42,7 @@ public class AppFastChat {
 		if (!check.exists())
 			check.mkdir();
 		
-		File active = new File("active"); // Za checkove
+		File active = new File("active"); // Za aktivne korisnike
 		if (!active.exists())
 			active.mkdir();
 		

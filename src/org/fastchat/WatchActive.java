@@ -33,7 +33,6 @@ public class WatchActive extends Thread {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-
 		}
 	}
 	
@@ -46,15 +45,13 @@ public class WatchActive extends Thread {
 				@SuppressWarnings("unchecked")
 				WatchEvent<Path> ev=(WatchEvent<Path>) event;
 				Path fileToRead=ev.context();
-				String str=fileToRead.toString();
+				String str=fileToRead.toString();  //Korisnik koji je promjenio status
 				int numOfBtn=0;
-				for (JButton btn : btnsArrayList) {
-					if(btn.getText().equals(str))
-						numOfBtn=btnsArrayList.indexOf(btn);
-					else {
-						numOfBtn++;
-					}
-				}
+				
+				if(!str.equals(watchUser.returnUserName()))
+				while(!watchUser.fgetUserBtn(numOfBtn).getText().equals(str))
+				    numOfBtn++;
+				
 				if (kind.equals(ENTRY_CREATE)) {					
 					// BUTTON MUST BE GREEN
 					watchUser.setBtnColor(true, numOfBtn);
@@ -63,6 +60,7 @@ public class WatchActive extends Thread {
 				{
 					watchUser.setBtnColor(false, numOfBtn);
 				}
+				numOfBtn=0;
 			}
 			key.reset();
 		}

@@ -31,10 +31,10 @@ public class UserFrame extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField usernamefld;
-	private ArrayList<User> users = new ArrayList<>(); // Korisnici u chatu
+	private ArrayList<User> users = new ArrayList<>(); // Korisnici u chatu, online i offline
 	private User userLogin;
 	private final JButton btnLogout = new JButton("LogOut");
-	private ArrayList<JButton> btnUsers = new ArrayList<>();
+	private ArrayList<JButton> btnUsers = new ArrayList<>();   //Buttons za korisnike
 	
 	public void setBtnColor(boolean color,int name)
 	{
@@ -46,6 +46,34 @@ public class UserFrame extends JFrame {
 			JButton btnToChange=btnUsers.get(name);
 		    btnToChange.setBackground(Color.WHITE);
 		}
+	}
+	
+	public JButton fgetUserBtn(int i)
+	{
+		return btnUsers.get(i);
+	}
+	
+	public String returnUserName()
+	{
+		return userLogin.getName()+" "+userLogin.getSurname();
+	}
+	public void setButtonActive(User userToChat,int i)
+	{
+		setBtnColor(true, i);
+		btnUsers.get(i).addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SendChat chat;
+				try {
+					chat = new SendChat(userLogin, userToChat);
+					chat.setVisible(true);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+
+		});
 	}
  //   private WatchInbox watch;
 	/**
@@ -82,7 +110,7 @@ public class UserFrame extends JFrame {
 				/* onaj ciji se login trazi, on postaje korisnik */
 				if (user.getUsername().equals(login)) {
 					userLogin = user;
-					File activeUserFile=new File("active/"+login);
+					File activeUserFile=new File("active/"+userLogin.getName()+" "+userLogin.getSurname());
 					activeUserFile.createNewFile();
 					
 					/* Logovan je, status se mjenja u aktivan */
@@ -134,8 +162,6 @@ public class UserFrame extends JFrame {
 		usernamefld.setColumns(10);
 		btnLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				File activeUserFile=new File("active/"+login);
-				activeUserFile.delete();
 				String toLogout = userLogin.getUsername();
 				userLogin.setActive(false);
 				File toDel = new File("FastChatObj/" + toLogout + ".fco");
@@ -152,6 +178,8 @@ public class UserFrame extends JFrame {
 					e.printStackTrace();
 				}
 			dispose();
+			File activeUserFile=new File("active/"+userLogin.getName()+" "+userLogin.getSurname());
+			activeUserFile.delete();
 			}
 		});
 
@@ -166,24 +194,13 @@ public class UserFrame extends JFrame {
 			JButton button = new JButton(users.get(i).getName() + " " + users.get(i).getSurname());
 			btnUsers.add(button);
 			User userToChat = users.get(i);
-			btnUsers.get(i).setBounds(75, 65 + i * 38, 125, 35);
-			if (users.get(i).getActive()) {
-				setBtnColor(true, i);
-				btnUsers.get(i).addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						SendChat chat;
-						try {
-							chat = new SendChat(userLogin, userToChat);
-							chat.setVisible(true);
-						} catch (Exception e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-					}
-
-				});
+			btnUsers.get(i).setBounds(75, 65 + i * 38, 145, 35);
+			File activeFile=new File("active/"+userToChat.getName()+" "+userToChat.getSurname());
+			if (activeFile.exists()) {
+				setButtonActive(userToChat,i);
 			}
+			else 
+				setBtnColor(false, i);
 			contentPane.add(btnUsers.get(i));
 		}
 	}
