@@ -55,6 +55,12 @@ public class StartFrame extends JFrame {
 		contentPane.add(btnLogin);
 		
 		JButton btnAbout = new JButton("ABOUT");
+		btnAbout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				About frame = new About();
+				frame.setVisible(true);
+			}
+		});
 		btnAbout.setBounds(84, 316, 183, 70);
 		contentPane.add(btnAbout);
 		
